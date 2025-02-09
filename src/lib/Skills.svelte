@@ -1,12 +1,15 @@
 <script lang="ts">
   const skills = [
-    { category: "Frontend", items: ["JavaScript", "TypeScript", "React", "Svelte", "HTML/CSS"] },
-    { category: "Backend", items: ["Node.js", "Python", "Java", "SQL", "REST APIs"] },
-    { category: "Tools", items: ["Git", "Docker", "AWS", "CI/CD", "Agile"] }
+    {
+      category: "Frontend",
+      items: ["VueJS", "ReactJS", "Svelte", "HTML/CSS", "JavaScript", "Tailwind/ Bootstrap", "AstroJS", "MeteorJS"],
+    },
+    { category: "Backend", items: ["Node.js", "GraphQL", "SQL", "MongoDB", "REST APIs"] },
+    { category: "Tools", items: ["Git", "DevOps", "CI/CD", "Agile"] },
   ];
 </script>
 
-<section class="mb-12 animate-fade-in">
+<section id="skills" class="mb-12 animate-fade-in">
   <h2 class="section-title">Skills</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     {#each skills as skill}
@@ -15,8 +18,18 @@
         <ul class="space-y-2">
           {#each skill.items as item}
             <li class="flex items-center">
-              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              <svg
+                class="w-4 h-4 mr-2 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               {item}
             </li>

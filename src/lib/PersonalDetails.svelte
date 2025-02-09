@@ -1,37 +1,20 @@
 <script lang="ts">
+  import { calculateYearsAndMonths } from '../utils/index';
   const details = {
-    age: "28",
-    dob: "1995-05-15",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
-    address: "123 Tech Street, San Francisco, CA 94105",
-    maritalStatus: "Single",
-    languages: ["English (Native)", "Spanish (Fluent)", "French (Intermediate)"],
+    // age: "28",
+    dob: "06 July, 1993",
+    email: "kadamdnyanesh248@gmail.com",
+    phone: "+91 9561116995",
+    address: "Hadapsar, Pune (MH), India - 411028",
+    maritalStatus: "Married",
+    languages: ["Marathi (Native)", "Hindi", "English"],
     availability: "Available for remote work"
   };
 </script>
 
-<section class="mb-12 animate-fade-in">
+<section id="personal-details" class="mb-12 animate-fade-in">
   <h2 class="section-title">Personal Details</h2>
   <div class="card grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div class="flex items-center">
-      <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-      <div>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Age</p>
-        <p class="font-medium">{details.age}</p>
-      </div>
-    </div>
-    <div class="flex items-center">
-      <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      <div>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Date of Birth</p>
-        <p class="font-medium">{details.dob}</p>
-      </div>
-    </div>
     <div class="flex items-center">
       <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -48,6 +31,24 @@
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Phone</p>
         <p class="font-medium">{details.phone}</p>
+      </div>
+    </div>
+    <!-- <div class="flex items-center">
+      <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+      <div>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Age</p>
+        <p class="font-medium">{details.age}</p>
+      </div>
+    </div> -->
+    <div class="flex items-center">
+      <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <div>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Date of Birth</p>
+        <p class="font-medium">{details.dob} ({calculateYearsAndMonths("1993-07-06")?.years} yrs)</p>
       </div>
     </div>
     <div class="flex items-center">
@@ -69,7 +70,7 @@
         <p class="font-medium">{details.maritalStatus}</p>
       </div>
     </div>
-    <div class="flex items-center col-span-2">
+    <div class="flex items-center">
       <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
       </svg>

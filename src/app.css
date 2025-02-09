@@ -18,10 +18,10 @@
   @apply text-2xl font-bold mb-6 text-indigo-900 dark:text-indigo-200 relative;
 }
 
-.section-title::after {
+/* .section-title::after {
   content: '';
   @apply absolute bottom-0 left-0 w-24 h-1 bg-indigo-600 dark:bg-indigo-400 rounded-full;
-}
+} */
 
 .card {
   @apply bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 mb-4 transition-all duration-200 border border-slate-200 dark:border-slate-700;

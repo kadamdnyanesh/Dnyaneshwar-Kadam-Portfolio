@@ -1,10 +1,21 @@
 <script lang="ts">
   let darkMode = $state(false);
 
+  // Detect system theme and set default
+  function detectSystemTheme() {
+    const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    darkMode = isDarkMode;
+    document.documentElement.classList.toggle("dark", isDarkMode);
+  }
+
+  // Toggle theme
   function toggleTheme() {
     darkMode = !darkMode;
-    document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle("dark");
   }
+
+  // Detect system theme on component initialization
+  detectSystemTheme();
 </script>
 
 <button
