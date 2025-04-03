@@ -6,6 +6,7 @@
   import Projects from "./lib/Projects.svelte";
   import PersonalDetails from "./lib/PersonalDetails.svelte";
   import Footer from "./lib/Footer.svelte";
+  import Certifications from "./lib/Certifications.svelte";
   import { onMount } from "svelte";
   import { portfolioData } from "./data/portfolio";
 
@@ -40,7 +41,7 @@
   >
   <meta
     name="description"
-    content="Senior Frontend Developer specializing in full-stack development, cloud solutions, and modern web technologies. View my projects and experience."
+    content="Senior Frontend Developer with 6+ years of experience in building scalable and efficient web applications. Proficient in Vue, Svelte, and React frameworks. Strong focus on user experience and performance optimization."
   />
 </svelte:head>
 
@@ -112,6 +113,14 @@
       <a
         type="button"
         target="_blank"
+        href="https://my-documents-1993.s3.ap-south-1.amazonaws.com/Dnyaneshwar_Kadam_CV.pdf"
+        class="btn-primary"
+      >
+        Download CV
+      </a>
+      <a
+        type="button"
+        target="_blank"
         href="https://www.linkedin.com/messaging/thread/new/?recipient=dnyaneshwar-kadam-b36713a0"
         class="btn-secondary"
       >
@@ -123,6 +132,7 @@
   <Experience />
   <Skills />
   <Projects />
+  <Certifications />
   <Education />
 </main>
 

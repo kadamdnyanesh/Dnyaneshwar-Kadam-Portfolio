@@ -15,14 +15,14 @@
           </span>
         {/each}
       </div>
-      <a
+      <!-- <a
         href={project.link}
         target="_blank"
         rel="noopener noreferrer"
         class="inline-block mt-4 text-indigo-600 dark:text-indigo-400 hover:underline"
       >
         View Project →
-      </a>
+      </a> -->
     </div>
   {/each}
 </section>

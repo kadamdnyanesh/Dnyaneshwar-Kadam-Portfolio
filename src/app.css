@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    --color-primary: 79 70 229;    /* indigo-600 */
-    --color-secondary: 16 185 129;  /* emerald-500 */
-    --color-accent: 245 158 11;    /* amber-500 */
+    --color-primary: 79 70 229; /* indigo-600 */
+    --color-secondary: 16 185 129; /* emerald-500 */
+    --color-accent: 245 158 11; /* amber-500 */
   }
 
   body {
