@@ -1,18 +1,11 @@
 <script lang="ts">
-  const skills = [
-    {
-      category: "Frontend",
-      items: ["VueJS", "ReactJS", "Svelte", "HTML/CSS", "JavaScript", "Tailwind/ Bootstrap", "AstroJS", "MeteorJS"],
-    },
-    { category: "Backend", items: ["Node.js", "GraphQL", "SQL", "MongoDB", "REST APIs"] },
-    { category: "Tools", items: ["Git", "DevOps", "CI/CD", "Agile"] },
-  ];
+  import { portfolioData } from "../data/portfolio";
 </script>
 
 <section id="skills" class="mb-12 animate-fade-in">
   <h2 class="section-title">Skills</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {#each skills as skill}
+    {#each portfolioData.skills as skill}
       <div class="card">
         <h3 class="text-xl font-semibold mb-3">{skill.category}</h3>
         <ul class="space-y-2">

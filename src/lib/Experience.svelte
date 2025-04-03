@@ -1,49 +1,6 @@
 <script lang="ts">
   import { calculateYearsAndMonths } from "../utils/index";
-
-  // Define the experiences array
-  const experiences = [
-    {
-      title: "Senior Application Developer (Assistant Manager)",
-      company: "Genpact",
-      period: "Jul 2023 - Present",
-      duration: "1 yr 8 mos",
-      location: "Gurugram, Haryana, India · Remote",
-      description:
-        "Led development of in-house applications using modern technologies. Mentored junior developers and implemented best practices.",
-      skills: ["Vue.js", "Svelte", "Astro.js"],
-    },
-    {
-      title: "Application Developer",
-      company: "Genpact",
-      period: "Sep 2021 - Present",
-      duration: "3 yrs 6 mos",
-      location: "Delhi, India",
-      description:
-        "Developed and maintained full-stack applications. Collaborated with cross-functional teams to deliver high-quality solutions.",
-      skills: ["Vue.js", "Svelte", "Astro.js"],
-    },
-    {
-      title: "Frontend Developer",
-      company: "iAssure International Technologies Pvt Ltd",
-      period: "Apr 2019 - Sep 2021",
-      duration: "2 yrs 6 mos",
-      location: "Pune",
-      description:
-        "Developed and maintained frontend applications. Collaborated with cross-functional teams to deliver high-quality solutions.",
-      skills: ["Vue.js", "React.js"],
-    },
-    {
-      title: "Software Engineering Trainee",
-      company: "iAssure International Technologies Pvt Ltd",
-      period: "Dec 2018 - Mar 2019",
-      duration: "4 mos",
-      location: "Pune, Maharashtra, India",
-      description:
-        "Trained in software development best practices and contributed to small-scale projects.",
-      skills: ["React.js"],
-    },
-  ];
+  import { portfolioData } from "../data/portfolio";
 
   // Calculate total experience duration
   const totalExperience = calculateYearsAndMonths("2018-12-08");
@@ -57,7 +14,7 @@
     </span>
   </div>
 
-  {#each experiences as exp}
+  {#each portfolioData.experiences as exp}
     <div
       class="card hover:shadow-lg mb-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md"
     >

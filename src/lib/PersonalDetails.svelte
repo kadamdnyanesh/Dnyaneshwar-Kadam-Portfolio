@@ -1,15 +1,6 @@
 <script lang="ts">
   import { calculateYearsAndMonths } from '../utils/index';
-  const details = {
-    // age: "28",
-    dob: "06 July, 1993",
-    email: "kadamdnyanesh248@gmail.com",
-    phone: "+91 9561116995",
-    address: "Hadapsar, Pune (MH), India - 411028",
-    maritalStatus: "Married",
-    languages: ["Marathi (Native)", "Hindi", "English"],
-    availability: "Available for remote work"
-  };
+  import { portfolioData } from '../data/portfolio';
 </script>
 
 <section id="personal-details" class="mb-12 animate-fade-in">
@@ -21,7 +12,7 @@
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Email</p>
-        <p class="font-medium">{details.email}</p>
+        <p class="font-medium">{portfolioData.personalDetails.email}</p>
       </div>
     </div>
     <div class="flex items-center">
@@ -30,25 +21,16 @@
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Phone</p>
-        <p class="font-medium">{details.phone}</p>
+        <p class="font-medium">{portfolioData.personalDetails.phone}</p>
       </div>
     </div>
-    <!-- <div class="flex items-center">
-      <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-      <div>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Age</p>
-        <p class="font-medium">{details.age}</p>
-      </div>
-    </div> -->
     <div class="flex items-center">
       <svg class="w-5 h-5 mr-3 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Date of Birth</p>
-        <p class="font-medium">{details.dob} ({calculateYearsAndMonths("1993-07-06")?.years} yrs)</p>
+        <p class="font-medium">{portfolioData.personalDetails.dob} ({calculateYearsAndMonths("1993-07-06")?.years} yrs)</p>
       </div>
     </div>
     <div class="flex items-center">
@@ -58,7 +40,7 @@
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Address</p>
-        <p class="font-medium">{details.address}</p>
+        <p class="font-medium">{portfolioData.personalDetails.address}</p>
       </div>
     </div>
     <div class="flex items-center">
@@ -67,7 +49,7 @@
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Marital Status</p>
-        <p class="font-medium">{details.maritalStatus}</p>
+        <p class="font-medium">{portfolioData.personalDetails.maritalStatus}</p>
       </div>
     </div>
     <div class="flex items-center">
@@ -76,7 +58,7 @@
       </svg>
       <div>
         <p class="text-sm text-gray-600 dark:text-gray-400">Languages</p>
-        <p class="font-medium">{details.languages.join(" • ")}</p>
+        <p class="font-medium">{portfolioData.personalDetails.languages.join(" • ")}</p>
       </div>
     </div>
   </div>

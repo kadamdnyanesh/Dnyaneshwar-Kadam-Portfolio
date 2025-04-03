@@ -7,23 +7,37 @@
   import PersonalDetails from "./lib/PersonalDetails.svelte";
   import Footer from "./lib/Footer.svelte";
   import { onMount } from "svelte";
-  import html2pdf from "html2pdf.js";
+  import { portfolioData } from "./data/portfolio";
 
-  function generatePDF() {
-    const element = document.getElementById("resume-content");
-    const opt = {
-      margin: 1,
-      filename: "resume.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-    html2pdf().set(opt).from(element).save();
-  }
+  let isDarkMode = false;
+
+  onMount(() => {
+    // Check initial theme
+    isDarkMode = document.documentElement.classList.contains("dark");
+
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          isDarkMode = document.documentElement.classList.contains("dark");
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  });
 </script>
 
 <svelte:head>
-  <title>Dnyaneshwar Kadam - Senior Frontend Developer Portfolio</title>
+  <title
+    >{portfolioData.personalDetails.name} - {portfolioData.personalDetails
+      .title}</title
+  >
   <meta
     name="description"
     content="Senior Frontend Developer specializing in full-stack development, cloud solutions, and modern web technologies. View my projects and experience."
@@ -32,26 +46,28 @@
 
 <ThemeToggle />
 
-<main class="container mx-auto px-4 py-8 max-w-4xl" id="resume-content">
+<main class="container mx-auto px-4 py-8 max-w-4xl">
   <header class="text-center mb-12 animate-fade-in">
     <div class="relative w-32 h-32 mx-auto mb-4">
       <img
-        src="https://media.licdn.com/dms/image/v2/D4D03AQEWEfXpscbc8g/profile-displayphoto-shrink_400_400/B4DZTrsmPeG4Ag-/0/1739121124763?e=1744848000&v=beta&t=sES1gcdp8tqCE4JB67lwlgAOuAh4uJ74LjtiFYZT3as"
-        alt="Dnyaneshwar Kadam - Senior Frontend Developer"
+        src={portfolioData.personalDetails.profileImage}
+        alt="{portfolioData.personalDetails.name} - {portfolioData
+          .personalDetails.title}"
         class="rounded-full w-full h-full object-cover shadow-lg"
       />
     </div>
     <h1 class="text-4xl font-bold mb-2 text-indigo-900 dark:text-indigo-200">
-      Dnyaneshwar Kadam
+      {portfolioData.personalDetails.name}
     </h1>
     <p class="text-xl text-slate-600 dark:text-slate-400 mb-4">
-      Senior Frontend Developer
+      {portfolioData.personalDetails.title}
     </p>
     <div class="flex justify-center space-x-4 mb-6">
       <a
-        href="https://github.com/kadamdnyanesh"
+        href={portfolioData.personalDetails.socialLinks.github}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="GitHub Profile"
         class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -61,9 +77,10 @@
         </svg>
       </a>
       <a
-        href="https://www.linkedin.com/in/dnyaneshwar-kadam-b36713a0"
+        href={portfolioData.personalDetails.socialLinks.linkedin}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="LinkedIn Profile"
         class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
       >
         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -73,22 +90,25 @@
         </svg>
       </a>
       <a
-        href="https://twitter.com"
+        href={portfolioData.personalDetails.socialLinks.codeSandbox}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="CodeSandbox Profile"
         class="text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400"
       >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <path
-            d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
-          />
-        </svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          class="w-6 h-6"
+          viewBox="0 0 24 24"
+          role="img"
+          ><title>CodeSandbox icon</title><path
+            d="M2 6l10.455-6L22.91 6 23 17.95 12.455 24 2 18V6zm2.088 2.481v4.757l3.345 1.86v3.516l3.972 2.296v-8.272L4.088 8.481zm16.739 0l-7.317 4.157v8.272l3.972-2.296V15.1l3.345-1.861V8.48zM5.134 6.601l7.303 4.144 7.32-4.18-3.871-2.197-3.41 1.945-3.43-1.968L5.133 6.6z"
+          /></svg
+        >
       </a>
     </div>
     <div class="flex justify-center space-x-4">
-      <button on:click={generatePDF} class="btn-primary">
-        Download Resume
-      </button>
       <a
         type="button"
         target="_blank"
