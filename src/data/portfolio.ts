@@ -79,7 +79,7 @@ export const portfolioData: PortfolioData = {
       codeSandbox: "https://codesandbox.io/u/kadamdnyanesh248",
     },
     profileImage:
-      "https://media.licdn.com/dms/image/v2/D4D03AQEWEfXpscbc8g/profile-displayphoto-shrink_400_400/B4DZTrsmPeG4Ag-/0/1739121124763?e=1744848000&v=beta&t=sES1gcdp8tqCE4JB67lwlgAOuAh4uJ74LjtiFYZT3as",
+      "https://avatars.githubusercontent.com/u/174183693?v=4",
   },
   certifications: [
     {
