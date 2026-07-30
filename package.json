@@ -19,5 +19,8 @@
     "tailwindcss": "^3.4.1",
     "typescript": "~5.7.2",
     "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1"
   }
 }

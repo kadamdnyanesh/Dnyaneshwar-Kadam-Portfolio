@@ -1,10 +1,11 @@
+import { withDynamicYears } from "../utils/index";
+
 interface Experience {
   title: string;
   company: string;
   period: string;
-  duration: string;
   location: string;
-  description: string;
+  highlights: string[];
   skills: string[];
 }
 
@@ -17,14 +18,17 @@ interface Education {
 
 interface Project {
   title: string;
+  role: string;
   description: string;
+  impact: string;
   technologies: string[];
-  link: string;
+  link?: string;
 }
 
 interface PersonalDetails {
   name: string;
   title: string;
+  summary: string;
   dob: string;
   email: string;
   phone: string;
@@ -40,9 +44,28 @@ interface PersonalDetails {
   profileImage: string;
 }
 
+/** Site-level SEO constants used by meta tags, sitemap, and JSON-LD. */
+export const siteSeo = {
+  siteUrl: "https://dnyaneshwar-kadam-portfolio.onrender.com",
+  title: "Dnyaneshwar Kadam — Senior Frontend Developer (Vue, Svelte, React)",
+  /** Use getSiteDescription() for live experience years. */
+  description:
+    "Senior Frontend Developer with {years}+ years building production web apps. Expert in Vue, Svelte, and React, with REST/GraphQL, cloud, and mentoring experience. Based in Pune, open to remote roles.",
+  keywords:
+    "Senior Frontend Developer, Vue.js Developer, Svelte Developer, React Developer, TypeScript, JavaScript, GraphQL, REST APIs, AWS, Pune, Remote Frontend Engineer, Dnyaneshwar Kadam",
+  locale: "en_IN",
+  themeColor: "#4f46e5",
+} as const;
+
+interface SkillItem {
+  name: string;
+  detail: string;
+}
+
 interface SkillCategory {
   category: string;
-  items: string[];
+  focus: string;
+  items: SkillItem[];
 }
 
 interface Certification {
@@ -65,34 +88,36 @@ export interface PortfolioData {
 export const portfolioData: PortfolioData = {
   personalDetails: {
     name: "Dnyaneshwar Kadam",
-    title: "Senior Frontend Developer (VueJS, Svelte, ReactJS)",
+    title: "Senior Frontend Developer · Vue · Svelte · React",
+    summary:
+      "Senior Frontend Developer with {years}+ years building production web apps for enterprise and product teams. Strong in Vue, Svelte, and React, with hands-on experience across REST/GraphQL APIs, cloud services, and mentoring engineers.",
     dob: "06 July, 1993",
     email: "kadamdnyanesh248@gmail.com",
     phone: "+91 9561116995",
-    address: "Hadapsar, Pune (MH), India - 411028",
+    address: "Hadapsar, Pune, Maharashtra, India",
     maritalStatus: "Married",
-    languages: ["Marathi (Native)", "Hindi", "English"],
-    availability: "Available for remote work",
+    languages: ["English", "Hindi", "Marathi (Native)"],
+    availability: "Open to Remote & Hybrid Roles · Full-time Opportunities",
     socialLinks: {
       github: "https://github.com/kadamdnyanesh",
       linkedin: "https://www.linkedin.com/in/dnyaneshwar-kadam-b36713a0",
       codeSandbox: "https://codesandbox.io/u/kadamdnyanesh248",
     },
     profileImage:
-      "https://avatars.githubusercontent.com/u/174183693?v=4",
+      "https://avatars.githubusercontent.com/u/174183693?s=400&u=9a6dcdd1f4d5158149675d86e1785df58b5f4157&v=4",
   },
   certifications: [
     {
       name: "AWS Certified Cloud Practitioner",
       issuer: "Amazon Web Services (AWS)",
-      date: "15 December 2023",
+      date: "December 2023",
       credentialId: "BFRDE1VDQNBE129G",
       logo: "https://my-documents-1993.s3.ap-south-1.amazonaws.com/AWS+Certified+Cloud+Practitioner.png",
     },
     {
       name: "Generative AI Certification",
       issuer: "Genpact",
-      date: "01 November 2024",
+      date: "November 2024",
       credentialId: "GENPACT-AI-2024",
       logo: "https://my-documents-1993.s3.ap-south-1.amazonaws.com/Generative+AI+2024.png",
     },
@@ -102,117 +127,168 @@ export const portfolioData: PortfolioData = {
       title: "Senior Application Developer (Assistant Manager)",
       company: "Genpact",
       period: "Jul 2023 - Present",
-      duration: "2023-07-01",
-      location: "Gurugram, Haryana, India · Remote",
-      description:
-        "Led development of in-house applications using modern technologies. Mentored junior developers and implemented best practices.",
-      skills: ["Vue.js", "Svelte", "Astro.js"],
+      location: "Gurugram, India · Remote",
+      highlights: [
+        "Own end-to-end frontend delivery for internal enterprise applications used across business teams.",
+        "Build and maintain UI features in Vue, Svelte, and Astro with a focus on performance, accessibility, and maintainable component design.",
+        "Mentor junior developers through code reviews, pairing, and shared frontend standards.",
+        "Partner with product, design, and backend teams to ship reliable releases on agile timelines.",
+      ],
+      skills: ["Vue.js", "Svelte", "Astro", "TypeScript", "REST APIs", "AWS"],
     },
     {
       title: "Application Developer",
       company: "Genpact",
-      period: "Sep 2021 - June 2023",
-      duration: "1 yr 10 mos",
+      period: "Sep 2021 - Jun 2023",
       location: "Delhi, India",
-      description:
-        "Developed and maintained full-stack applications. Collaborated with cross-functional teams to deliver high-quality solutions.",
-      skills: ["Vue.js", "Svelte", "Astro.js"],
+      highlights: [
+        "Developed and supported full-stack features for business-critical internal tools.",
+        "Integrated frontend clients with REST and GraphQL services; improved reliability of data-heavy workflows.",
+        "Collaborated with cross-functional stakeholders to translate requirements into shipped UI.",
+        "Contributed to reusable component patterns that reduced duplication across modules.",
+      ],
+      skills: ["Vue.js", "Svelte", "Astro", "GraphQL", "Node.js"],
     },
     {
       title: "Frontend Developer",
       company: "iAssure International Technologies Pvt Ltd",
       period: "Apr 2019 - Sep 2021",
-      duration: "2 yrs 6 mos",
       location: "Pune, Maharashtra, India",
-      description:
-        "Developed and maintained frontend applications. Collaborated with cross-functional teams to deliver high-quality solutions.",
-      skills: ["Vue.js", "React.js"],
+      highlights: [
+        "Delivered customer-facing web and hybrid mobile interfaces for SaaS and booking products.",
+        "Built responsive UIs in Vue and React with Bootstrap/Tailwind, integrating REST APIs and MongoDB-backed services.",
+        "Owned feature implementation from wireframe to production for products such as Coffic and Assure ID.",
+        "Worked closely with backend engineers to debug API contracts and improve release quality.",
+      ],
+      skills: ["Vue.js", "React", "Cordova", "MongoDB", "Bootstrap"],
     },
     {
       title: "Software Engineering Trainee",
       company: "iAssure International Technologies Pvt Ltd",
       period: "Dec 2018 - Mar 2019",
-      duration: "4 mos",
       location: "Pune, Maharashtra, India",
-      description:
-        "Trained in software development best practices and contributed to small-scale projects.",
-      skills: ["React.js"],
+      highlights: [
+        "Built foundational skills in React, JavaScript, and modern web development practices.",
+        "Contributed UI fixes and small features on live projects under senior engineer guidance.",
+        "Learned agile delivery, version control, and collaborative code review workflows.",
+      ],
+      skills: ["React", "JavaScript", "HTML/CSS"],
     },
   ],
   education: [
     {
-      degree: "Master of Engineering",
-      school: "Pune University",
-      period: "2015 - 2017",
+      degree: "Master of Engineering — Mechanical Machine Design",
+      school: "Savitribai Phule Pune University",
+      period: "2015 – 2017",
       description:
-        "Specialized in Mechanical Machine Design. Published multiple research papers and completed masters with CGPA 8.02",
+        "CGPA 8.02. Published research work and presented at academic conferences while completing a full-time postgraduate program.",
     },
     {
       degree: "Bachelor of Engineering",
-      school: "Pune University",
-      period: "2012 - 2015",
+      school: "Savitribai Phule Pune University",
+      period: "2012 – 2015",
       description:
-        "Activities and societies: 1) Event Manager of workshop taken by IIT Delhi & IIT Guwahati. 2) Research Paper Presented in International Conference on Science And Technology. 3) Effective Student of NSS and Earn and Learn.",
+        "Active in student leadership: managed workshops with IIT Delhi & IIT Guwahati, presented research at an international science & technology conference, and participated in NSS and Earn & Learn programs.",
     },
   ],
   projects: [
     {
-      title: "Master Data Management",
+      title: "Master Data Management (MDM)",
+      role: "Frontend Engineer",
       description:
-        "Data management of all users and other dependant applications master management. Built with Svelte, REST API, Tailwind CSS, and AWS Services. Role: UI development, API integration, AWS bucket management",
-      technologies: ["Svelte", "REST API", "AWS", "Tailwind"],
-      link: "https://github.com",
+        "Central platform to manage users and shared master data consumed by multiple dependent applications.",
+      impact:
+        "Built the Svelte UI, REST integrations, and AWS workflows that made master data easier to maintain across systems.",
+      technologies: ["Svelte", "REST APIs", "AWS", "Tailwind CSS"],
     },
     {
       title: "Digital Content Locker (DCL)",
+      role: "Frontend Engineer",
       description:
-        "A file storage and sharing system like OneDrive with secure access. Built with VueJS, Tailwind CSS, Neo4j, GraphQL, and Azure Functions. Role: UI development, API integration, GraphQL schema, Mail Trigger",
-      technologies: ["VueJS", "GraphQL", "Neo4j", "Tailwind"],
-      link: "https://github.com",
+        "Secure file storage and sharing product (OneDrive-style) for enterprise document workflows.",
+      impact:
+        "Delivered Vue UI, GraphQL schema contributions, API integration, and email notification triggers on Azure Functions + Neo4j.",
+      technologies: [
+        "Vue.js",
+        "GraphQL",
+        "Neo4j",
+        "Azure Functions",
+        "Tailwind CSS",
+      ],
     },
     {
-      title: "Coffic Co-working Cafes",
+      title: "Coffic — Co-working Cafes",
+      role: "Frontend Developer",
       description:
-        "A co-working space booking platform in India. Web (VueJS, Tailwind) and Mobile (Cordova) with MongoDB. Role: Front-end development, UI building, API integration.",
-      technologies: ["VueJS", "Cordova", "Tailwind"],
-      link: "https://github.com",
+        "India-focused co-working space booking platform spanning web and mobile clients.",
+      impact:
+        "Implemented booking UX, responsive layouts, and API integration for Vue web and Cordova mobile apps backed by MongoDB.",
+      technologies: ["Vue.js", "Cordova", "MongoDB", "Tailwind CSS"],
     },
     {
       title: "ABACUS Online",
+      role: "Frontend Developer",
       description:
-        "An online Abacus test platform for students. Built with ReactJS, Bootstrap, MongoDB. Role: UI development, API integration.",
-      technologies: ["ReactJS", "MongoDB", "Bootstrap"],
-      link: "https://github.com",
+        "Online Abacus assessment platform enabling students to take timed tests digitally.",
+      impact:
+        "Developed the React test UI and API integrations used by students and instructors for online evaluations.",
+      technologies: ["React", "MongoDB", "Bootstrap"],
     },
     {
       title: "Assure ID",
+      role: "Frontend Developer",
       description:
-        "An employee background verification portal. Built with MeteorJS, Bootstrap, MongoDB. Role: UI development, bug fixing.",
-      technologies: ["MeteorJS", "MongoDB", "Bootstrap"],
-      link: "https://github.com",
+        "Employee background verification portal for HR and compliance workflows.",
+      impact:
+        "Contributed Meteor.js UI features and production bug fixes that improved verification form reliability.",
+      technologies: ["Meteor.js", "MongoDB", "Bootstrap"],
     },
   ],
   skills: [
     {
       category: "Frontend",
+      focus: "UI frameworks and styling used across production apps.",
       items: [
-        "VueJS",
-        "ReactJS",
-        "Svelte",
-        "HTML/CSS",
-        "JavaScript",
-        "Tailwind/ Bootstrap",
-        "AstroJS",
-        "MeteorJS",
+        { name: "JavaScript / TypeScript", detail: "Primary language stack" },
+        { name: "Vue.js", detail: "Strongest production framework" },
+        { name: "Svelte", detail: "Modern internal platforms" },
+        { name: "React", detail: "Product & assessment UIs" },
+        { name: "Astro", detail: "Multi-framework pages" },
+        { name: "HTML / CSS", detail: "Responsive, accessible layouts" },
+        { name: "Tailwind & Bootstrap", detail: "Fast, consistent styling" },
       ],
     },
     {
-      category: "Backend",
-      items: ["Node.js", "GraphQL", "SQL", "MongoDB", "REST APIs"],
+      category: "APIs & Data",
+      focus: "Connecting UI to services and data stores.",
+      items: [
+        { name: "REST APIs", detail: "Integration & contract debugging" },
+        { name: "GraphQL", detail: "Schema & client data fetching" },
+        { name: "Node.js", detail: "Full-stack feature support" },
+        { name: "MongoDB / SQL", detail: "Working with app data models" },
+        { name: "Meteor.js", detail: "Legacy product maintenance" },
+      ],
     },
     {
-      category: "Tools",
-      items: ["Git", "DevOps", "CI/CD", "Agile"],
+      category: "Delivery",
+      focus: "Shipping reliably in team environments.",
+      items: [
+        { name: "AWS", detail: "Cloud Practitioner certified" },
+        { name: "Azure Functions", detail: "Serverless workflows" },
+        { name: "Git & CI/CD", detail: "Reviews and releases" },
+        { name: "Agile / Scrum", detail: "Sprint-based delivery" },
+        { name: "Mentoring", detail: "Code reviews & junior coaching" },
+      ],
     },
   ],
 };
+
+/** Live summary with experience years calculated from CAREER_START. */
+export function getPersonalSummary(asOf: Date = new Date()): string {
+  return withDynamicYears(portfolioData.personalDetails.summary, asOf);
+}
+
+/** Live SEO / meta description with current experience years. */
+export function getSiteDescription(asOf: Date = new Date()): string {
+  return withDynamicYears(siteSeo.description, asOf);
+}

@@ -28,11 +28,11 @@
 }
 
 .btn-primary {
-  @apply bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors duration-200;
+  @apply inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition-colors duration-200;
 }
 
 .btn-secondary {
-  @apply bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-lg transition-colors duration-200;
+  @apply inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-lg transition-colors duration-200;
 }
 
 .tag {
@@ -41,4 +41,95 @@
 
 .link {
   @apply text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors duration-200;
+}
+
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:bg-indigo-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+/* Section-level scroll reveal */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-section .section-title,
+.reveal-section > h2,
+.reveal-section [id$="-heading"] {
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.05s;
+}
+
+.reveal-section.is-visible .section-title,
+.reveal-section.is-visible > h2,
+.reveal-section.is-visible [id$="-heading"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-section .card {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.reveal-section.is-visible .card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--stagger, 0.1s);
+}
+
+/* Hero entrance (above the fold) */
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hero-enter {
+  animation: hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-enter .rounded-full {
+  animation: hero-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-section,
+  .reveal-section .section-title,
+  .reveal-section > h2,
+  .reveal-section [id$="-heading"],
+  .reveal-section .card,
+  .hero-enter,
+  .hero-enter .rounded-full {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }
