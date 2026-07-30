@@ -132,4 +132,206 @@
     transition: none !important;
     animation: none !important;
   }
+
+  .sticky-header,
+  .sticky-header__avatar-wrap,
+  .sticky-header__text,
+  .hero-photo {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .sticky-header.is-visible {
+    opacity: 1;
+  }
+}
+
+/* ——— Compact sticky identity bar ——— */
+.sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity 0.2s ease;
+}
+
+.sticky-header.is-measuring {
+  opacity: 0;
+  pointer-events: none;
+  /* Keep in layout for accurate avatar target measurement */
+}
+
+.sticky-header.is-visible {
+  pointer-events: auto;
+  opacity: calc(0.25 + var(--sticky-progress, 1) * 0.75);
+  box-shadow:
+    0 1px 0 rgb(15 23 42 / 0.06),
+    0 8px 24px -12px rgb(15 23 42 / 0.18);
+}
+
+.sticky-header.is-visible.is-scrolling-down {
+  opacity: 0.97;
+  box-shadow:
+    0 1px 0 rgb(15 23 42 / 0.04),
+    0 4px 12px -10px rgb(15 23 42 / 0.1);
+}
+
+.sticky-header__inner {
+  @apply mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-2.5;
+  background: rgb(248 250 252 / 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid rgb(226 232 240 / 0.7);
+}
+
+:is(.dark) .sticky-header__inner {
+  background: rgb(15 23 42 / 0.82);
+  border-bottom-color: transparent;
+}
+
+:is(.dark) .sticky-header.is-visible {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.04),
+    0 8px 24px -12px rgb(0 0 0 / 0.45);
+}
+
+.sticky-header__brand {
+  @apply flex min-w-0 items-center gap-3 no-underline;
+}
+
+.sticky-header__avatar-wrap {
+  @apply relative shrink-0 overflow-hidden rounded-full;
+  width: 2.5rem;
+  height: 2.5rem;
+  box-shadow: 0 0 0 2px rgb(99 102 241 / 0.35);
+  opacity: 0;
+}
+
+.sticky-header__avatar-wrap.is-settled {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.sticky-header__avatar-wrap.is-morphing {
+  opacity: 0 !important;
+}
+
+.sticky-header__avatar {
+  @apply h-full w-full object-cover;
+}
+
+.sticky-header__text {
+  @apply flex min-w-0 flex-col;
+  opacity: 0;
+}
+
+.sticky-header__text.is-settled {
+  opacity: 1;
+  transition: opacity 0.12s ease;
+}
+
+.sticky-header__text.is-morphing {
+  opacity: 0 !important;
+}
+
+.sticky-header__name {
+  @apply truncate text-sm font-semibold text-indigo-900 dark:text-indigo-200;
+}
+
+.sticky-header__title {
+  @apply truncate text-xs text-slate-500 dark:text-slate-400;
+}
+
+.sticky-header__nav {
+  @apply hidden items-center gap-1 sm:flex;
+  padding-right: 3.25rem; /* room for theme toggle */
+}
+
+.sticky-header__nav a {
+  @apply rounded-md px-2.5 py-1.5 text-xs font-medium text-slate-600 no-underline
+    transition-colors duration-200 hover:bg-indigo-50 hover:text-indigo-700
+    dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-indigo-300;
+}
+
+/* Hero photo softens as compact header takes over */
+.hero-photo {
+  transform-origin: center center;
+}
+
+.hero-photo.is-hidden,
+#hero-name.is-hidden,
+#hero-title.is-hidden {
+  /* Keep layout + measurable rect; only hide visually */
+  opacity: 0;
+}
+
+.photo-morph {
+  position: fixed;
+  z-index: 60;
+  border-radius: 9999px;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  box-shadow:
+    0 10px 32px -10px rgb(15 23 42 / 0.4),
+    0 0 0 2px rgb(99 102 241 / 0.4);
+  will-change: left, top, width, height;
+}
+
+.photo-morph.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.text-morph {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+  will-change: left, top, font-size, max-width;
+  transform-origin: left top;
+}
+
+.text-morph.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.text-morph--name {
+  font-weight: 700;
+  color: rgb(49 46 129);
+}
+
+:is(.dark) .text-morph--name {
+  color: rgb(199 210 254);
+}
+
+.text-morph--title {
+  font-weight: 400;
+  color: rgb(100 116 139);
+}
+
+:is(.dark) .text-morph--title {
+  color: rgb(148 163 184);
+}
+
+body.has-sticky-header {
+  /* fixed sticky bar overlays content */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-morph,
+  .text-morph {
+    transition: none !important;
+  }
 }

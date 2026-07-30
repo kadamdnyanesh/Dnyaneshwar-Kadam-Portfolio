@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import ThemeToggle from "./lib/ThemeToggle.svelte";
+  import StickyHeader from "./lib/StickyHeader.svelte";
   import Experience from "./lib/Experience.svelte";
   import Education from "./lib/Education.svelte";
   import Skills from "./lib/Skills.svelte";
@@ -7,13 +9,41 @@
   import Contact from "./lib/Contact.svelte";
   import Footer from "./lib/Footer.svelte";
   import Certifications from "./lib/Certifications.svelte";
-  import { portfolioData, siteSeo, getPersonalSummary, getSiteDescription } from "./data/portfolio";
+  import {
+    portfolioData,
+    siteSeo,
+    getPersonalSummary,
+    getSiteDescription,
+  } from "./data/portfolio";
   import { downloadCV } from "./utils/generateCV";
 
   let isDownloading = $state(false);
+  let morphProgress = $state(0);
+  let textProgress = $state(0);
+  let scrollingDown = $state(false);
+  let lastScrollY = 0;
+
+  let morphEl: HTMLImageElement | null = $state(null);
+  let nameMorphEl: HTMLElement | null = $state(null);
+  let titleMorphEl: HTMLElement | null = $state(null);
+
   const p = portfolioData.personalDetails;
   const summary = getPersonalSummary();
   const description = getSiteDescription();
+
+  /** Text trails the photo — higher = later start for name/title. */
+  const TEXT_DELAY = 0.28;
+  /** Extra scroll distance so the morph feels slower (not tied only to photo→avatar gap). */
+  const MORPH_STRETCH = 2.6;
+  const MORPH_MIN_SCROLL = 200;
+  /** Dead zone before morph begins (px of upward travel). */
+  const MORPH_START_LAG = 28;
+
+  const compactHeader = $derived(morphProgress > 0.04);
+  const avatarSettled = $derived(morphProgress >= 0.995);
+  const textSettled = $derived(textProgress >= 0.995);
+  const heroPhotoHidden = $derived(morphProgress > 0.02);
+  const heroTextHidden = $derived(textProgress > 0.02);
 
   async function handleDownloadCV() {
     if (isDownloading) return;
@@ -25,6 +55,177 @@
       isDownloading = false;
     }
   }
+
+  function clamp(n: number, min: number, max: number) {
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function easeInOutCubic(t: number) {
+    return t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+  }
+
+  function lerp(a: number, b: number, t: number) {
+    return a + (b - a) * t;
+  }
+
+  onMount(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let ticking = false;
+    let restHeroTop: number | null = null;
+
+    type Rect = { left: number; top: number; width: number; height: number; fontSize?: number };
+    let photoOrigin: Rect | null = null;
+    let nameOrigin: Rect | null = null;
+    let titleOrigin: Rect | null = null;
+
+    function readRect(el: HTMLElement, withFont = false): Rect {
+      const r = el.getBoundingClientRect();
+      return {
+        left: r.left,
+        top: r.top,
+        width: r.width,
+        height: r.height,
+        fontSize: withFont ? parseFloat(getComputedStyle(el).fontSize) : undefined,
+      };
+    }
+
+    function placeTextMorph(
+      el: HTMLElement | null,
+      origin: Rect | null,
+      toEl: HTMLElement | null,
+      t: number,
+      active: boolean
+    ) {
+      if (!el || !origin || !toEl) {
+        el?.classList.remove("is-active");
+        return;
+      }
+      if (!active) {
+        el.classList.remove("is-active");
+        return;
+      }
+
+      const to = readRect(toEl, true);
+      const toSize = to.fontSize ?? 12;
+      const fromSize = origin.fontSize ?? 24;
+
+      el.style.left = `${lerp(origin.left, to.left, t)}px`;
+      el.style.top = `${lerp(origin.top, to.top, t)}px`;
+      el.style.fontSize = `${lerp(fromSize, toSize, t)}px`;
+      el.style.maxWidth = `${lerp(origin.width, to.width, t)}px`;
+      el.style.transition = "none";
+      el.classList.add("is-active");
+    }
+
+    const updateMorph = () => {
+      const hero = document.getElementById("hero-photo");
+      const sticky = document.getElementById("sticky-avatar");
+      const heroName = document.getElementById("hero-name");
+      const heroTitle = document.getElementById("hero-title");
+      const stickyName = document.getElementById("sticky-name");
+      const stickyTitle = document.getElementById("sticky-title");
+
+      if (!hero || !sticky || !morphEl) {
+        ticking = false;
+        return;
+      }
+
+      const from = hero.getBoundingClientRect();
+      const to = sticky.getBoundingClientRect();
+
+      if (restHeroTop === null && window.scrollY < 12) {
+        restHeroTop = from.top;
+      }
+      if (restHeroTop === null) {
+        ticking = false;
+        return;
+      }
+
+      const startY = restHeroTop;
+      const endY = to.top;
+      const naturalRange = Math.max(startY - endY, 56);
+      const range = Math.max(naturalRange * MORPH_STRETCH, MORPH_MIN_SCROLL);
+
+      const moved = startY - from.top - MORPH_START_LAG;
+      let progress = clamp(moved / range, 0, 1);
+      if (reduceMotion) progress = progress >= 0.5 ? 1 : 0;
+
+      morphProgress = progress;
+      const delayed = clamp((progress - TEXT_DELAY) / (1 - TEXT_DELAY), 0, 1);
+      textProgress = delayed;
+
+      const photoT = reduceMotion ? progress : easeInOutCubic(progress);
+      const textT = reduceMotion ? delayed : easeInOutCubic(delayed);
+
+      document.body.classList.toggle("has-sticky-header", progress > 0.04);
+
+      // Lock viewport start positions so a longer scroll still animates on-screen
+      if (progress <= 0.02) {
+        photoOrigin = null;
+        morphEl.classList.remove("is-active");
+      } else {
+        if (!photoOrigin) photoOrigin = readRect(hero);
+        if (progress < 0.995 && photoOrigin) {
+          morphEl.style.left = `${lerp(photoOrigin.left, to.left, photoT)}px`;
+          morphEl.style.top = `${lerp(photoOrigin.top, to.top, photoT)}px`;
+          morphEl.style.width = `${lerp(photoOrigin.width, to.width, photoT)}px`;
+          morphEl.style.height = `${lerp(photoOrigin.height, to.height, photoT)}px`;
+          morphEl.style.transition = "none";
+          morphEl.classList.add("is-active");
+        } else {
+          morphEl.classList.remove("is-active");
+        }
+      }
+
+      if (delayed <= 0.02) {
+        nameOrigin = null;
+        titleOrigin = null;
+        nameMorphEl?.classList.remove("is-active");
+        titleMorphEl?.classList.remove("is-active");
+      } else {
+        if (!nameOrigin && heroName) nameOrigin = readRect(heroName, true);
+        if (!titleOrigin && heroTitle) titleOrigin = readRect(heroTitle, true);
+        const textActive = delayed < 0.995;
+        placeTextMorph(nameMorphEl, nameOrigin, stickyName, textT, textActive);
+        placeTextMorph(titleMorphEl, titleOrigin, stickyTitle, textT, textActive);
+      }
+
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastScrollY;
+      if (Math.abs(delta) > 4 && morphProgress > 0.2) {
+        scrollingDown = delta > 0;
+      }
+      if (morphProgress < 0.05) scrollingDown = false;
+      lastScrollY = y;
+
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(updateMorph);
+    };
+
+    const onResize = () => {
+      restHeroTop = null;
+      photoOrigin = null;
+      nameOrigin = null;
+      titleOrigin = null;
+      onScroll();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+    lastScrollY = window.scrollY;
+    requestAnimationFrame(updateMorph);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      document.body.classList.remove("has-sticky-header");
+    };
+  });
 </script>
 
 <svelte:head>
@@ -54,12 +255,37 @@
 
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
+<img
+  bind:this={morphEl}
+  src={p.profileImage}
+  alt=""
+  aria-hidden="true"
+  class="photo-morph"
+  decoding="async"
+/>
+
+<div bind:this={nameMorphEl} class="text-morph text-morph--name" aria-hidden="true">
+  {p.name}
+</div>
+<div bind:this={titleMorphEl} class="text-morph text-morph--title" aria-hidden="true">
+  {p.title}
+</div>
+
+<StickyHeader
+  name={p.name}
+  title={p.title}
+  image={p.profileImage}
+  compact={compactHeader}
+  scrollingDown={scrollingDown}
+  avatarSettled={avatarSettled}
+  textSettled={textSettled}
+  progress={morphProgress}
+  textProgress={textProgress}
+/>
+
 <ThemeToggle />
 
-<nav
-  class="sr-only"
-  aria-label="Primary"
->
+<nav class="sr-only" aria-label="Primary">
   <ul>
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -75,9 +301,13 @@
   <header
     id="about"
     class="text-center mb-12 hero-enter"
-    aria-labelledby="profile-name"
+    aria-labelledby="hero-name"
   >
-    <div class="relative md:w-32 md:h-32 w-24 h-24 lg:w-48 lg:h-48 mx-auto mb-4">
+    <div
+      id="hero-photo"
+      class="hero-photo relative md:w-32 md:h-32 w-24 h-24 lg:w-48 lg:h-48 mx-auto mb-4"
+      class:is-hidden={heroPhotoHidden}
+    >
       <img
         src={p.profileImage}
         alt="{p.name}, {p.title}"
@@ -89,12 +319,18 @@
       />
     </div>
     <h1
-      id="profile-name"
-      class="text-4xl font-bold mb-2 text-indigo-900 dark:text-indigo-200"
+      id="hero-name"
+      class="w-fit mx-auto text-4xl font-bold mb-2 text-indigo-900 dark:text-indigo-200"
+      class:is-hidden={heroTextHidden}
     >
       {p.name}
     </h1>
-    <p class="text-xl text-slate-600 dark:text-slate-400 mb-3">
+
+    <p
+      id="hero-title"
+      class="w-fit mx-auto text-xl text-slate-600 dark:text-slate-400 mb-3"
+      class:is-hidden={heroTextHidden}
+    >
       {p.title}
     </p>
     <p

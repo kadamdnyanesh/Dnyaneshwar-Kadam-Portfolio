@@ -23,7 +23,7 @@
 <button
   type="button"
   onclick={toggleTheme}
-  class="fixed top-4 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors duration-200"
+  class="fixed top-3 right-4 z-50 p-2 rounded-full bg-gray-200/90 dark:bg-gray-700/90 backdrop-blur-sm transition-colors duration-200 shadow-sm"
   aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
   aria-pressed={darkMode}
 >
